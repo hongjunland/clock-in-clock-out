@@ -77,7 +77,7 @@ const LogoSection = styled.section`
 const MainTitle = styled.div`
   margin: auto 0;
   span {
-    font-size: 21px;
+    font-size: 24px;
     vertical-align: middle;
   }
 `;
@@ -100,7 +100,6 @@ const ContentBox = styled.div`
   border-width: 2px;
   border-style: solid;
   border-color: rgb(224, 224, 224);
-  color: #333;
 `;
 const ContentBoxHeader = styled.div`
   display: flex;
