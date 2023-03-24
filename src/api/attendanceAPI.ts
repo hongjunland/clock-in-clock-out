@@ -34,6 +34,7 @@ async function updateAttendance(user: User){
     const attendance = await fetchAttendance(user);
     if(attendance?.endTime === 'unknown'){
         const newAttendance : Attendance = {...attendance, endTime: dateToTime(new Date())};
+        console.log(newAttendance);
         return newAttendance;
     }
 }
