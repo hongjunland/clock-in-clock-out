@@ -1,7 +1,7 @@
-export interface AttendanceRecord{
+export interface Attendance{
     id: number;
     userId: number;
-    date: Date;
+    date: string;
     startTime: string;
     endTime: string;
     annual: boolean;

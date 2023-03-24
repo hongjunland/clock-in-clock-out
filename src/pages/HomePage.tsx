@@ -4,38 +4,44 @@ import { FaPlus } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { User } from "../types/Users";
-import { todosData, userData } from "../dummy/dummyData";
+import { attendancesData, todosData } from "../dummy/dummyData";
 import { Todo } from "../types/Todo";
-import { AttendanceRecord } from "../types/AttendanceRecord";
+import { Attendance } from "../types/AttendanceRecord";
+import { isToday } from "../utils/dateUtils";
+import { attendanceAPI } from "../api/attendanceAPI";
 
-export default function HomePage() {
-  const [user, setUser] = useState<User>();
+interface Props {
+  user: User;
+}
+export default function HomePage({ user }: Props) {
   const [todo, setTodo] = useState<Todo>();
-  const [attendanceList, setAttendanceList] = useState<AttendanceRecord[]>();
-  const getUser = async () => {
-    await setUser(userData);
-    console.log(user);
-  };
-  const getTodo = async (userId: number) => {
-    const newTodo = await todosData.find((el: Todo) => el.author === userId);
+  const [attendance, setAttendance] = useState<Attendance>();
+  const [annual, setAnnual] = useState(0);
+  const getTodo = () => {
+    const userId = user.id;
+    const newTodo = todosData.find((el: Todo) => el.author === userId);
     setTodo(newTodo);
-    console.log(todo);
   };
-  // const getAttendanceList = (userId: number) =>{
-  //   const newAttendanceList = attendanceList
-  // }
+  const getAttendance = () => {
+    const userId = user.id;
+    const newAttendance = attendancesData.find(
+      (el: Attendance) => el.userId === userId && isToday(el.date)
+    );
+    setAttendance(newAttendance);
+  };
+  const getAnnual = async () => {
+    const newAnnual = await attendanceAPI.fetchAnnual(user);
+    setAnnual(newAnnual);
+  };
   useEffect(() => {
-    getUser();
-    if (user) {
-      getTodo(user.id);
-    }
-  }, []);
+    getTodo();
+    getAttendance();
+    getAnnual();
+  }, [user]);
   return (
     <Container>
-      <div>
-        {user && undefined}
-      </div>
       <main>
+        {user && user.id}
         <LogoSection>
           <Logo src={logo} alt={"logo"} />
           <MainTitle>
@@ -52,7 +58,7 @@ export default function HomePage() {
                 </ContentBoxButton>
               </ContentBoxHeader>
               <ContentBoxMain>
-                <ContentValue>15일</ContentValue>
+                <ContentValue>{annual}일</ContentValue>
               </ContentBoxMain>
             </ContentBox>
             <ContentBox>

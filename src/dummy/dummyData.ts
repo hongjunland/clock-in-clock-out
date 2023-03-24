@@ -1,14 +1,18 @@
-export const userData = {
+import { Attendance } from "../types/AttendanceRecord"
+import { Todo } from "../types/Todo"
+import { User } from "../types/Users"
+
+export const userData : User= {
     id: 1,
     userName: 'John',
     annual: 15,
 }
 
-export const todosData = [
+export const todosData : Todo[] = [
     {id: 1, author: 1, content: '오늘의 일정!'}
 ]
 
-export const attendanceRecordsData = [
+export const attendancesData : Attendance[] = [
     {
         id: 1,
         date: '2023-03-13',
