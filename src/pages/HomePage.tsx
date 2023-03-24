@@ -34,9 +34,9 @@ export default function HomePage() {
                 </ContentBoxButton>
               </ContentBoxHeader>
               <ContentBoxMain>
-                <ContentTodoList>
-                  <li>오늘의 일정!</li>
-                </ContentTodoList>
+                <ContentTodo>
+                  오늘의 일정!!
+                </ContentTodo>
               </ContentBoxMain>
             </ContentBox>
             <ContentBox>
@@ -123,8 +123,7 @@ const ContentValue = styled.p`
   margin: auto auto;
   font-size: 2rem;
 `;
-const ContentTodoList = styled.ul`
-  list-style-type: none;
+const ContentTodo = styled.label`
   margin: 0;
   padding: 0 1rem 1rem 1rem;
   width: 100%;
