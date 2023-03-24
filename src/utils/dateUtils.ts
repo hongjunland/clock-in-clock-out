@@ -15,4 +15,17 @@ function isSameYear(dateString: string): boolean{
     return today.getFullYear() === date.getFullYear();
 }
 
-export { isToday, isSameYear};
+function dateToTime(date: Date){
+    const hours = date.getHours().toString().padStart(2, '0'); 
+    const minutes = date.getMinutes().toString().padStart(2, '0'); 
+    const time = `${hours}:${minutes}`;
+    return time;
+}
+
+function dateToString(date: Date){
+    const year = date.getFullYear();
+    const month = (date.getMonth()+1).toString().padStart(2, '0');
+    const day = date.getDay();
+    return `${year}-${month}-${day}`
+}
+export { isToday, isSameYear, dateToTime, dateToString};

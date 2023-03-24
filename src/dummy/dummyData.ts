@@ -52,7 +52,7 @@ export const attendancesData : Attendance[] = [
         startTime: 'unknown',
         endTime: 'unknown',
         annual: false,
-    }
+    },
 ]
 
 export const annualsData = [

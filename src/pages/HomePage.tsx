@@ -2,13 +2,13 @@ import styled from "@emotion/styled";
 import logo from "../assets/logo.png";
 import { FaPlus } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { User } from "../types/Users";
-import { attendancesData, todosData } from "../dummy/dummyData";
 import { Todo } from "../types/Todo";
-import { Attendance } from "../types/AttendanceRecord";
-import { isToday } from "../utils/dateUtils";
 import { attendanceAPI } from "../api/attendanceAPI";
+import { todoAPI } from "../api/todoAPI";
+import { Attendance } from "../types/AttendanceRecord";
+import { attendancesData } from "../dummy/dummyData";
 
 interface Props {
   user: User;
@@ -17,31 +17,40 @@ export default function HomePage({ user }: Props) {
   const [todo, setTodo] = useState<Todo>();
   const [attendance, setAttendance] = useState<Attendance>();
   const [annual, setAnnual] = useState(0);
-  const getTodo = () => {
-    const userId = user.id;
-    const newTodo = todosData.find((el: Todo) => el.author === userId);
+  const getTodo = useCallback(async () => {
+    const newTodo = await todoAPI.fetchTodo(user);
     setTodo(newTodo);
-  };
-  const getAttendance = () => {
-    const userId = user.id;
-    const newAttendance = attendancesData.find(
-      (el: Attendance) => el.userId === userId && isToday(el.date)
-    );
+  }, [user]);
+  const getAttendance = useCallback(async () => {
+    const newAttendance = await attendanceAPI.fetchAttendance(user);
     setAttendance(newAttendance);
-  };
-  const getAnnual = async () => {
+  }, [user]);
+  const getAnnual = useCallback(async () => {
     const newAnnual = await attendanceAPI.fetchAnnual(user);
     setAnnual(newAnnual);
-  };
+  }, [user]);
+  const handleAttendanceChange = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!attendance) {
+        const newAttendance = await attendanceAPI.createAttendance(user);
+        setAttendance(newAttendance);
+      } else {
+        const newAttendance = await attendanceAPI.updateAttendance(user);
+        setAttendance(newAttendance);
+      }
+    },
+    [attendance, user]
+  );
   useEffect(() => {
     getTodo();
     getAttendance();
     getAnnual();
-  }, [user]);
+    console.log(attendance);
+    console.log(attendancesData);
+  }, [user, getTodo, getAttendance, getAnnual, attendance, handleAttendanceChange]);
   return (
     <Container>
       <main>
-        {user && user.id}
         <LogoSection>
           <Logo src={logo} alt={"logo"} />
           <MainTitle>
@@ -69,7 +78,7 @@ export default function HomePage({ user }: Props) {
                 </ContentBoxButton>
               </ContentBoxHeader>
               <ContentBoxMain>
-                <ContentTodo>오늘의 일정!!</ContentTodo>
+                <ContentTodo>{todo?.content}</ContentTodo>
               </ContentBoxMain>
             </ContentBox>
             <ContentBox>
@@ -77,7 +86,9 @@ export default function HomePage({ user }: Props) {
                 <ContentBoxTitle>출/퇴근</ContentBoxTitle>
               </ContentBoxHeader>
               <ContentBoxMain>
-                <ContentToggleButton>출근</ContentToggleButton>
+                <ContentToggleButton onClick={handleAttendanceChange}>
+                  {attendance === undefined ? "출근" : "퇴근"}
+                </ContentToggleButton>
               </ContentBoxMain>
             </ContentBox>
           </ContentBoxGroup>
