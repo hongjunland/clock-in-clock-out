@@ -2,8 +2,34 @@ import styled from "@emotion/styled";
 import logo from "../assets/logo.png";
 import { FaPlus } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { User } from "../types/Users";
+import { todosData, userData } from "../dummy/dummyData";
+import { Todo } from "../types/Todo";
+import { AttendanceRecord } from "../types/AttendanceRecord";
 
 export default function HomePage() {
+  const [user, setUser] = useState<User>();
+  const [todo, setTodo] = useState<Todo>();
+  const [attendanceList, setAttendanceList] = useState<AttendanceRecord[]>();
+  const getUser = () => {
+    setUser(userData);
+    console.log(user);
+  };
+  const getTodo = (userId: number) => {
+    const newTodo = todosData.find((el: Todo) => el.author === userId);
+    setTodo(newTodo);
+    console.log(todo);
+  };
+  // const getAttendanceList = (userId: number) =>{
+  //   const newAttendanceList = attendanceList
+  // }
+  useEffect(() => {
+    getUser();
+    if (user) {
+      getTodo(user.id);
+    }
+  }, []);
   return (
     <Container>
       <main>
@@ -34,9 +60,7 @@ export default function HomePage() {
                 </ContentBoxButton>
               </ContentBoxHeader>
               <ContentBoxMain>
-                <ContentTodo>
-                  오늘의 일정!!
-                </ContentTodo>
+                <ContentTodo>오늘의 일정!!</ContentTodo>
               </ContentBoxMain>
             </ContentBox>
             <ContentBox>
