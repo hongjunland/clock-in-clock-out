@@ -12,12 +12,12 @@ export default function HomePage() {
   const [user, setUser] = useState<User>();
   const [todo, setTodo] = useState<Todo>();
   const [attendanceList, setAttendanceList] = useState<AttendanceRecord[]>();
-  const getUser = () => {
-    setUser(userData);
+  const getUser = async () => {
+    await setUser(userData);
     console.log(user);
   };
-  const getTodo = (userId: number) => {
-    const newTodo = todosData.find((el: Todo) => el.author === userId);
+  const getTodo = async (userId: number) => {
+    const newTodo = await todosData.find((el: Todo) => el.author === userId);
     setTodo(newTodo);
     console.log(todo);
   };
@@ -32,6 +32,9 @@ export default function HomePage() {
   }, []);
   return (
     <Container>
+      <div>
+        {user && undefined}
+      </div>
       <main>
         <LogoSection>
           <Logo src={logo} alt={"logo"} />
