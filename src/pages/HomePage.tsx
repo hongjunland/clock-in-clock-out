@@ -1,15 +1,15 @@
 import styled from "@emotion/styled";
-import { FaPlus } from "react-icons/fa";
-import { FaPen } from "react-icons/fa";
+import { FaPlus, FaPen } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
 import { User } from "../types/User";
 import { Todo } from "../types/Todo";
 import { attendanceAPI } from "../api/attendanceAPI";
 import { todoAPI } from "../api/todoAPI";
 import { Attendance } from "../types/Attendance";
-import { attendancesData } from "../dummy/dummyData";
 import { Header } from "../components/Header";
 import { ContentBox } from "../components/ContentBox";
+import { getAttendanceStatus, isExited } from "../utils/attendanceUtils";
+import { StatusButtonColor } from "../constants/status";
 interface Props {
   user: User;
 }
@@ -20,41 +20,31 @@ export default function HomePage({ user }: Props) {
   const getTodo = useCallback(async () => {
     const newTodo = await todoAPI.fetchTodo(user);
     setTodo(newTodo);
-  }, [user]);
+  },[user]);
   const getAttendance = useCallback(async () => {
     const newAttendance = await attendanceAPI.fetchAttendance(user);
     setAttendance(newAttendance);
-  }, [user]);
+  },[user]);
   const getAnnual = useCallback(async () => {
     const newAnnual = await attendanceAPI.fetchAnnual(user);
     setAnnual(newAnnual);
-  }, [user]);
-  const handleAttendanceChange = useCallback(
-    async (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!attendance) {
-        const newAttendance = await attendanceAPI.createAttendance(user);
-        setAttendance(newAttendance);
-      } else {
-        const newAttendance = await attendanceAPI.updateAttendance(user);
-        setAttendance(newAttendance);
-      }
-    },
-    [attendance, user]
-  );
+  },[user]);
+  const handleAttendanceChange = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    if (!attendance) {
+      const newAttendance = await attendanceAPI.createAttendance(user);
+      setAttendance(newAttendance);
+    } else {
+      const newAttendance = await attendanceAPI.updateAttendance(user);
+      setAttendance(newAttendance);
+    }
+  };
   useEffect(() => {
     getTodo();
     getAttendance();
     getAnnual();
-    console.log(attendance);
-    console.log(attendancesData);
-  }, [
-    user,
-    getTodo,
-    getAttendance,
-    getAnnual,
-    attendance,
-    handleAttendanceChange,
-  ]);
+  }, [user, attendance, annual, getTodo, getAttendance, getAnnual]);
   return (
     <Container>
       <Header />
@@ -67,13 +57,19 @@ export default function HomePage({ user }: Props) {
             <ContentTodo>{todo?.content}</ContentTodo>
           </ContentBox>
           <ContentBox title="출/퇴근">
-            <ContentToggleButton onClick={handleAttendanceChange}>
-              {attendance === undefined ? "출근" : "퇴근"}
+            <ContentToggleButton
+              onClick={handleAttendanceChange}
+              disabled={isExited(attendance)}
+              attendance={attendance}
+            >
+              {getAttendanceStatus(attendance)}
             </ContentToggleButton>
           </ContentBox>
         </ContentBoxGroup>
         <ContentChartBox>
-          <ContentBox title="금주 근무시간">dddd</ContentBox>
+          <ContentBox title="금주 근무시간">
+            <input value={attendance?.endTime} />
+          </ContentBox>
         </ContentChartBox>
       </Main>
     </Container>
@@ -115,7 +111,7 @@ const ContentTodo = styled.label`
   width: 100%;
 `;
 
-const ContentToggleButton = styled.button`
+const ContentToggleButton = styled.button<{attendance?: Attendance}>`
   width: 100px;
   height: 40px;
   font-size: 16px;
@@ -125,5 +121,5 @@ const ContentToggleButton = styled.button`
   line-height: 2.5em;
   border: 0;
   border-radius: 4px;
-  background-color: rgb(52, 152, 219);
+  background-color: ${props=> isExited(props.attendance) ? StatusButtonColor.COMPLETE : StatusButtonColor.PROGRESS};
 `;

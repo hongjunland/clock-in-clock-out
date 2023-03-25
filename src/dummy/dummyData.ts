@@ -1,3 +1,4 @@
+import { NotChecked } from "../constants/status"
 import { Attendance } from "../types/Attendance"
 import { Todo } from "../types/Todo"
 import { User } from "../types/User"
@@ -33,8 +34,8 @@ export const attendancesData : Attendance[] = [
         id: 3,
         date: '2023-03-15',
         userId: 1,
-        startTime: 'unknown',
-        endTime: 'unknown',
+        startTime: NotChecked,
+        endTime: NotChecked,
         annual: true,
     }
     ,{
@@ -43,14 +44,6 @@ export const attendancesData : Attendance[] = [
         userId: 1,
         startTime: '08:30',
         endTime: '19:40',
-        annual: false,
-    },
-    {
-        id: 5,
-        date: '2023-03-17',
-        userId: 1,
-        startTime: 'unknown',
-        endTime: 'unknown',
         annual: false,
     },
 ]

@@ -1,3 +1,4 @@
+import { NotChecked } from "../constants/status";
 import { attendancesData } from "../dummy/dummyData";
 import { Attendance } from "../types/Attendance";
 import { User } from "../types/User";
@@ -23,7 +24,7 @@ async function createAttendance(user:User){
         userId: user.id,
         date: dateToString(now),
         startTime: dateToTime(now),
-        endTime: 'unknown',
+        endTime: NotChecked,
         annual: false
     } 
     attendancesData.push(newAttendance);
@@ -32,11 +33,13 @@ async function createAttendance(user:User){
 async function updateAttendance(user: User){
     await new Promise((re) => setTimeout(re, 1000));
     const attendance = await fetchAttendance(user);
-    if(attendance?.endTime === 'unknown'){
+    if(attendance?.endTime === NotChecked){
         const newAttendance : Attendance = {...attendance, endTime: dateToTime(new Date())};
-        console.log(newAttendance);
+        const idx = attendancesData.findIndex((el:Attendance)=>el.id === attendance.id);
+        attendancesData[idx] = newAttendance;
         return newAttendance;
     }
+    return attendance;
 }
   export const attendanceAPI = {
     fetchAttendance,
