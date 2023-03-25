@@ -51,6 +51,9 @@ export default function HomePage({ user }: Props) {
       setAttendance(newAttendance);
     }
   };
+  const handleTodoChange = async () => {
+    // const 
+  };
   useEffect(() => {
     getTodo();
     getAttendance();
@@ -62,14 +65,12 @@ export default function HomePage({ user }: Props) {
         createPortal(
           <Modal showModal={showModal} onClose={handleCloseModal}>
             <ContentBox>
-              <TodoModalContent>{todo?.content}</TodoModalContent>
+              <TodoModalContent value={todo?.content}/>
             </ContentBox>
             <ModalFooter
               title="저장"
               onClose={handleCloseModal}
-              onSubmit={() => {
-                console.log(123);
-              }}
+              onSubmit={handleTodoChange}
             />
           </Modal>,
           document.body
