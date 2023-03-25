@@ -1,5 +1,5 @@
 import { todosData } from "../dummy/dummyData";
-import { User } from "../types/Users";
+import { User } from "../types/User";
 
 async function fetchTodo(user: User) {
   await new Promise((re) => setTimeout(re, 1000));

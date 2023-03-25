@@ -2,11 +2,11 @@ import styled from "@emotion/styled";
 import { FaPlus } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
-import { User } from "../types/Users";
+import { User } from "../types/User";
 import { Todo } from "../types/Todo";
 import { attendanceAPI } from "../api/attendanceAPI";
 import { todoAPI } from "../api/todoAPI";
-import { Attendance } from "../types/AttendanceRecord";
+import { Attendance } from "../types/Attendance";
 import { attendancesData } from "../dummy/dummyData";
 import { Header } from "../components/Header";
 import { ContentBox } from "../components/ContentBox";
@@ -72,7 +72,9 @@ export default function HomePage({ user }: Props) {
             </ContentToggleButton>
           </ContentBox>
         </ContentBoxGroup>
-        <ContentChartBox title="금주 근무시간">ㅇㄴㅇ</ContentChartBox>
+        <ContentChartBox>
+          <ContentBox title="금주 근무시간">dddd</ContentBox>
+        </ContentChartBox>
       </Main>
     </Container>
   );
@@ -92,14 +94,14 @@ const Main = styled.main`
 const ContentBoxGroup = styled.div`
   display: flex;
   justify-content: space-between;
+  margin: 1rem;
+  gap: 1rem;
   > div {
-    flex: 1;
-    margin: 1rem;
     height: 200px;
   }
 `;
 
-const ContentChartBox = styled(ContentBox)`
+const ContentChartBox = styled.div`
   margin: 1rem;
 `;
 

@@ -1,6 +1,6 @@
-import { Attendance } from "../types/AttendanceRecord"
+import { Attendance } from "../types/Attendance"
 import { Todo } from "../types/Todo"
-import { User } from "../types/Users"
+import { User } from "../types/User"
 
 export const userData : User= {
     id: 1,

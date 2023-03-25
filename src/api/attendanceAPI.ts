@@ -1,6 +1,6 @@
 import { attendancesData } from "../dummy/dummyData";
-import { Attendance } from "../types/AttendanceRecord";
-import { User } from "../types/Users";
+import { Attendance } from "../types/Attendance";
+import { User } from "../types/User";
 import { dateToString, dateToTime, isSameYear, isToday } from "../utils/dateUtils";
 
 async function fetchAnnual(user: User){

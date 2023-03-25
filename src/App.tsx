@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { userAPI } from "./api/userAPI";
 import HomePage from "./pages/HomePage";
-import { User } from "./types/Users";
+import { User } from "./types/User";
 
 function App() {
   const [user, setUser] = useState<User>();

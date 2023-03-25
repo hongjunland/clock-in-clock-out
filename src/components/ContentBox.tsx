@@ -35,6 +35,7 @@ const Wrapper = styled.div`
   border-width: 2px;
   border-style: solid;
   border-color: rgb(224, 224, 224);
+  flex: 1;
 `;
 
 const ContentBoxTitle = styled.div`
