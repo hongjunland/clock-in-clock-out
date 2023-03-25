@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { userAPI } from "./api/userAPI";
-import { userData } from "./dummy/dummyData";
 import HomePage from "./pages/HomePage";
 import { User } from "./types/Users";
 

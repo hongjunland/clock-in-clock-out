@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import logo from "../assets/logo.png";
 import { FaPlus } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
@@ -9,7 +8,8 @@ import { attendanceAPI } from "../api/attendanceAPI";
 import { todoAPI } from "../api/todoAPI";
 import { Attendance } from "../types/AttendanceRecord";
 import { attendancesData } from "../dummy/dummyData";
-
+import { Header } from "../components/Header";
+import { ContentBox } from "../components/ContentBox";
 interface Props {
   user: User;
 }
@@ -47,58 +47,33 @@ export default function HomePage({ user }: Props) {
     getAnnual();
     console.log(attendance);
     console.log(attendancesData);
-  }, [user, getTodo, getAttendance, getAnnual, attendance, handleAttendanceChange]);
+  }, [
+    user,
+    getTodo,
+    getAttendance,
+    getAnnual,
+    attendance,
+    handleAttendanceChange,
+  ]);
   return (
     <Container>
-      <main>
-        <LogoSection>
-          <Logo src={logo} alt={"logo"} />
-          <MainTitle>
-            <span>Noris Work Dashboard</span>
-          </MainTitle>
-        </LogoSection>
-        <ContentSection>
-          <ContentBoxGroup>
-            <ContentBox>
-              <ContentBoxHeader>
-                <ContentBoxTitle>연차 현황</ContentBoxTitle>
-                <ContentBoxButton>
-                  <FaPlus />
-                </ContentBoxButton>
-              </ContentBoxHeader>
-              <ContentBoxMain>
-                <ContentValue>{annual}일</ContentValue>
-              </ContentBoxMain>
-            </ContentBox>
-            <ContentBox>
-              <ContentBoxHeader>
-                <ContentBoxTitle>오늘의 일정</ContentBoxTitle>
-                <ContentBoxButton>
-                  <FaPen />
-                </ContentBoxButton>
-              </ContentBoxHeader>
-              <ContentBoxMain>
-                <ContentTodo>{todo?.content}</ContentTodo>
-              </ContentBoxMain>
-            </ContentBox>
-            <ContentBox>
-              <ContentBoxHeader>
-                <ContentBoxTitle>출/퇴근</ContentBoxTitle>
-              </ContentBoxHeader>
-              <ContentBoxMain>
-                <ContentToggleButton onClick={handleAttendanceChange}>
-                  {attendance === undefined ? "출근" : "퇴근"}
-                </ContentToggleButton>
-              </ContentBoxMain>
-            </ContentBox>
-          </ContentBoxGroup>
-          <ContentChartBox>
-            <ContentBoxHeader>
-              <ContentBoxTitle>금주 근무시간</ContentBoxTitle>
-            </ContentBoxHeader>
-          </ContentChartBox>
-        </ContentSection>
-      </main>
+      <Header />
+      <Main>
+        <ContentBoxGroup>
+          <ContentBox title="연차 현황" iconButton={<FaPlus />}>
+            <ContentValue>{annual}일</ContentValue>
+          </ContentBox>
+          <ContentBox title="오늘의 일정" iconButton={<FaPen />}>
+            <ContentTodo>{todo?.content}</ContentTodo>
+          </ContentBox>
+          <ContentBox title="출/퇴근">
+            <ContentToggleButton onClick={handleAttendanceChange}>
+              {attendance === undefined ? "출근" : "퇴근"}
+            </ContentToggleButton>
+          </ContentBox>
+        </ContentBoxGroup>
+        <ContentChartBox title="금주 근무시간">ㅇㄴㅇ</ContentChartBox>
+      </Main>
     </Container>
   );
 }
@@ -110,22 +85,7 @@ const Container = styled.div`
   justify-content: center;
   font-family: "HanSans";
 `;
-const Logo = styled.img`
-  width: 89px;
-  height: 89px;
-`;
-const LogoSection = styled.section`
-  display: flex;
-  flex-direction: row;
-`;
-const MainTitle = styled.div`
-  margin: auto 0;
-  span {
-    font-size: 24px;
-    vertical-align: middle;
-  }
-`;
-const ContentSection = styled.section`
+const Main = styled.main`
   padding-left: 4rem;
   padding-right: 4rem;
 `;
@@ -133,36 +93,7 @@ const ContentBoxGroup = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-const ContentBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  aspect-ratio: 3/2;
-  width: 30%;
-  font-size: 18px;
-  border-radius: 10px;
-  line-height: 3em;
-  border-width: 2px;
-  border-style: solid;
-  border-color: rgb(224, 224, 224);
-`;
-const ContentBoxHeader = styled.div`
-  display: flex;
-  padding: 0 1rem;
-  height: 54px;
-`;
-const ContentBoxTitle = styled.div`
-  font-size: 18px;
-  font-weight: 800;
-`;
-const ContentBoxButton = styled.div`
-  margin-left: auto;
-  margin-right: 0;
-  color: rgb(224, 224, 224);
-`;
-const ContentBoxMain = styled.div`
-  display: flex;
-  flex: 1;
-`;
+
 const ContentValue = styled.p`
   margin: auto auto;
   font-size: 2rem;
@@ -172,15 +103,11 @@ const ContentTodo = styled.label`
   padding: 0 1rem 1rem 1rem;
   width: 100%;
 `;
-const ContentChartBox = styled.div`
-  border-radius: 10px;
-  background-color: rgb(255, 255, 255);
-  line-height: 3em;
-  border-width: 2px;
-  border-style: solid;
-  border-color: rgb(224, 224, 224);
-  aspect-ratio: 14/5;
-  margin-top: 2rem;
+const ContentChartBox = styled(ContentBox)`
+  && {
+    aspect-ratio: 14/5;
+    margin-top: 2rem;
+  }
 `;
 const ContentToggleButton = styled.button`
   width: 100px;
