@@ -3,24 +3,22 @@ interface Props {
   children?: React.ReactNode;
   title?: string;
   iconButton?: React.ReactNode;
-  buttonOnclick?: () => void;
 }
 export function ContentBox({
   children,
   title,
   iconButton,
-  buttonOnclick,
 }: Props) {
   return (
     <Wrapper>
-      <ContentBoxHeader>
+      {title && (<ContentBoxHeader>
         <ContentBoxTitle>{title}</ContentBoxTitle>
         {iconButton && (
-          <ContentBoxButton onClick={buttonOnclick}>
+          <ContentBoxButton>
             {iconButton}
           </ContentBoxButton>
         )}
-      </ContentBoxHeader>
+      </ContentBoxHeader>)}
       <ContentBoxMain>{children}</ContentBoxMain>
     </Wrapper>
   );

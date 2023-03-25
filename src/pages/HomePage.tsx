@@ -10,6 +10,8 @@ import { Header } from "../components/Header";
 import { ContentBox } from "../components/ContentBox";
 import { getAttendanceStatus, isExited } from "../utils/attendanceUtils";
 import { StatusButtonColor } from "../constants/status";
+import Modal from "../components/Modal";
+import { createPortal } from "react-dom";
 interface Props {
   user: User;
 }
@@ -17,18 +19,26 @@ export default function HomePage({ user }: Props) {
   const [todo, setTodo] = useState<Todo>();
   const [attendance, setAttendance] = useState<Attendance>();
   const [annual, setAnnual] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   const getTodo = useCallback(async () => {
     const newTodo = await todoAPI.fetchTodo(user);
     setTodo(newTodo);
-  },[user]);
+  }, [user]);
   const getAttendance = useCallback(async () => {
     const newAttendance = await attendanceAPI.fetchAttendance(user);
     setAttendance(newAttendance);
-  },[user]);
+  }, [user]);
   const getAnnual = useCallback(async () => {
     const newAnnual = await attendanceAPI.fetchAnnual(user);
     setAnnual(newAnnual);
-  },[user]);
+  }, [user]);
   const handleAttendanceChange = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -44,16 +54,28 @@ export default function HomePage({ user }: Props) {
     getTodo();
     getAttendance();
     getAnnual();
-  }, [user, attendance, annual, getTodo, getAttendance, getAnnual]);
+  }, [user, attendance, annual, getTodo, getAttendance, getAnnual, showModal]);
   return (
     <Container>
+      {showModal &&
+        createPortal(
+          <Modal showModal={showModal} onClose={handleCloseModal}>
+            <ContentBox>
+              <TodoModalContent>{todo?.content}</TodoModalContent>
+            </ContentBox>
+          </Modal>,
+          document.body
+        )}
       <Header />
       <Main>
         <ContentBoxGroup>
           <ContentBox title="연차 현황" iconButton={<FaPlus />}>
             <ContentValue>{annual}일</ContentValue>
           </ContentBox>
-          <ContentBox title="오늘의 일정" iconButton={<FaPen />}>
+          <ContentBox
+            title="오늘의 일정"
+            iconButton={<FaPen onClick={handleShowModal} />}
+          >
             <ContentTodo>{todo?.content}</ContentTodo>
           </ContentBox>
           <ContentBox title="출/퇴근">
@@ -111,7 +133,7 @@ const ContentTodo = styled.label`
   width: 100%;
 `;
 
-const ContentToggleButton = styled.button<{attendance?: Attendance}>`
+const ContentToggleButton = styled.button<{ attendance?: Attendance }>`
   width: 100px;
   height: 40px;
   font-size: 16px;
@@ -121,5 +143,15 @@ const ContentToggleButton = styled.button<{attendance?: Attendance}>`
   line-height: 2.5em;
   border: 0;
   border-radius: 4px;
-  background-color: ${props=> isExited(props.attendance) ? StatusButtonColor.COMPLETE : StatusButtonColor.PROGRESS};
+  background-color: ${(props) =>
+    isExited(props.attendance)
+      ? StatusButtonColor.COMPLETE
+      : StatusButtonColor.PROGRESS};
+`;
+
+const TodoModalContent = styled.textarea`
+  margin: 0;
+  padding: 1rem 1rem 1rem 1rem;
+  width: 300px;
+  height: 200px;
 `;
