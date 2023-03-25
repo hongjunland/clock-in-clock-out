@@ -12,6 +12,7 @@ import { getAttendanceStatus, isExited } from "../utils/attendanceUtils";
 import { StatusButtonColor } from "../constants/status";
 import Modal from "../components/Modal";
 import { createPortal } from "react-dom";
+import ModalFooter from "../components/ModalFooter";
 interface Props {
   user: User;
 }
@@ -63,6 +64,13 @@ export default function HomePage({ user }: Props) {
             <ContentBox>
               <TodoModalContent>{todo?.content}</TodoModalContent>
             </ContentBox>
+            <ModalFooter
+              title="저장"
+              onClose={handleCloseModal}
+              onSubmit={() => {
+                console.log(123);
+              }}
+            />
           </Modal>,
           document.body
         )}

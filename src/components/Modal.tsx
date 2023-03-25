@@ -5,6 +5,7 @@ interface ModalProps {
   children: React.ReactNode;
   showModal: boolean;
   onClose: () => void;
+  onSubmit?: ()=> void;
 }
 
 export default function Modal({ showModal, onClose, children }: ModalProps) {
