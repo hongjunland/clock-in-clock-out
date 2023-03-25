@@ -92,6 +92,15 @@ const Main = styled.main`
 const ContentBoxGroup = styled.div`
   display: flex;
   justify-content: space-between;
+  > div {
+    flex: 1;
+    margin: 1rem;
+    height: 200px;
+  }
+`;
+
+const ContentChartBox = styled(ContentBox)`
+  margin: 1rem;
 `;
 
 const ContentValue = styled.p`
@@ -103,12 +112,7 @@ const ContentTodo = styled.label`
   padding: 0 1rem 1rem 1rem;
   width: 100%;
 `;
-const ContentChartBox = styled(ContentBox)`
-  && {
-    aspect-ratio: 14/5;
-    margin-top: 2rem;
-  }
-`;
+
 const ContentToggleButton = styled.button`
   width: 100px;
   height: 40px;

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 interface Props {
-  children: React.ReactNode;
-  title: string;
+  children?: React.ReactNode;
+  title?: string;
   iconButton?: React.ReactNode;
   buttonOnclick?: () => void;
 }
@@ -21,9 +21,7 @@ export function ContentBox({
           </ContentBoxButton>
         )}
       </ContentBoxHeader>
-      <ContentBoxMain>
-        {children}
-      </ContentBoxMain>
+      <ContentBoxMain>{children}</ContentBoxMain>
     </Wrapper>
   );
 }
@@ -31,8 +29,6 @@ export function ContentBox({
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  aspect-ratio: 3/2;
-  width: 30%;
   font-size: 18px;
   border-radius: 10px;
   line-height: 3em;
