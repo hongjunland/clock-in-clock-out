@@ -16,7 +16,8 @@ function TodoModal({ user, content, onClose }: Props) {
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCurrentContent(e.currentTarget.value);
   };
-  const handleSubmitTodo = async () => {
+  const handleSubmitTodo = async (e: React.MouseEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const todo = await todoAPI.fetchTodo(user);
     if (todo) {
       const newTodo = { ...todo, content: currentContent };
@@ -28,22 +29,21 @@ function TodoModal({ user, content, onClose }: Props) {
   return (
     <>
       {createPortal(
-      <Wrapper>
-        <ModalContent>
-          <ContentBox>
-            <TodoModalContent
-              value={currentContent}
-              onChange={handleContentChange}
-            />
-          </ContentBox>
-          <ModalFooter
-            title="저장"
-            onClose={onClose}
-            onSubmit={handleSubmitTodo}
-          />
-        </ModalContent>
-      </Wrapper>
-      , document.body)}
+        <Wrapper>
+          <ModalContent>
+            <form onSubmit={handleSubmitTodo}>
+              <ContentBox>
+                <TodoModalContent
+                  value={currentContent}
+                  onChange={handleContentChange}
+                />
+              </ContentBox>
+              <ModalFooter title="저장" onClose={onClose} />
+            </form>
+          </ModalContent>
+        </Wrapper>,
+        document.body
+      )}
     </>
   );
 }

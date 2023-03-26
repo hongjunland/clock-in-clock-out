@@ -3,11 +3,10 @@ import styled from "@emotion/styled";
 interface Props {
   title: string;
   onClose: () => void;
-  onSubmit: () => void;
 }
-export default function ModalFooter({ title, onClose, onSubmit }: Props) {
+export default function ModalFooter({ title, onClose }: Props) {
   return <Wrapper>
-    <Submit onClick={onSubmit}>{title}</Submit>
+    <Submit type="submit">{title}</Submit>
     <CloseButton onClick={onClose}>닫기</CloseButton>
   </Wrapper>;
 }

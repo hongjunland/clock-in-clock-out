@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { attendanceAPI } from "../api/attendanceAPI";
 import { User } from "../types/User";
-import { formatDigit, getLastDay } from "../utils/dateUtils";
+import { dateToTime, formatDigit, getLastDay } from "../utils/dateUtils";
 import ModalFooter from "./ModalFooter";
 
 interface Props {
@@ -25,52 +26,59 @@ function AnnualModal({ showModal, user, content, onClose }: Props) {
     day: formatDigit(now.getDate()),
   });
   const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormState({ ...formState, [e.target.name]: formatDigit(e.target.value) });
+    setFormState({
+      ...formState,
+      [e.target.name]: formatDigit(e.target.value),
+    });
   };
-  const handleSubmitTodo = async () => {
-    console.log(formState);
+  const handleSubmitTodo = async (e: React.MouseEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newDate = new Date(`${formState.year}-${formState.month}-${formState.day}`);
+    const newAttendance = await attendanceAPI.createAnnual(user, newDate);
+    console.log(newAttendance);
     onClose();
   };
   return (
     <>
       {createPortal(
-      <Wrapper>
-        <ModalContent>
-          <div>
-            <AnnualTitle><span>연차 신청</span></AnnualTitle>
-            <AnnualInput
-              name="year"
-              type="number"
-              min={now.getFullYear()}
-              max={9999}
-              value={formState.year}
-              onChange={handleContentChange}
-            />
-            <AnnualInput
-              name="month"
-              type="number"
-              min={0}
-              max={12}
-              value={formState.month}
-              onChange={handleContentChange}
-            />
-            <AnnualInput
-              name="day"
-              type="number"
-              min={0}
-              max={31}
-              value={formState.day}
-              onChange={handleContentChange}
-            />
-          </div>
-          <ModalFooter
-            title="신청"
-            onClose={onClose}
-            onSubmit={handleSubmitTodo}
-          />
-        </ModalContent>
-      </Wrapper>
-      , document.body)}
+        <Wrapper>
+          <ModalContent>
+            <form onSubmit={handleSubmitTodo}>
+              <div>
+                <AnnualTitle>
+                  <span>연차 신청</span>
+                </AnnualTitle>
+                <AnnualInput
+                  name="year"
+                  type="number"
+                  min={now.getFullYear()}
+                  max={9999}
+                  value={formState.year}
+                  onChange={handleContentChange}
+                />
+                <AnnualInput
+                  name="month"
+                  type="number"
+                  min={0}
+                  max={12}
+                  value={formState.month}
+                  onChange={handleContentChange}
+                />
+                <AnnualInput
+                  name="day"
+                  type="number"
+                  min={0}
+                  max={31}
+                  value={formState.day}
+                  onChange={handleContentChange}
+                />
+              </div>
+              <ModalFooter title="신청" onClose={onClose} />
+            </form>
+          </ModalContent>
+        </Wrapper>,
+        document.body
+      )}
     </>
   );
 }
@@ -103,7 +111,7 @@ const AnnualInput = styled.input`
   border-radius: 4px;
   border: 1px solid #ccc;
   line-height: 40px;
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   margin-right: 1rem;
   width: 80px;
   height: 40px;
