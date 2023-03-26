@@ -12,10 +12,7 @@ import { Bar } from "react-chartjs-2";
 interface Props {
   workHours: number[];
 }
-function formatTime(minutes: number): number {
-  const decimalHours = minutes / 60;
-  return decimalHours;
-}
+
 export function WorkHoursChart({ workHours }: Props) {
   ChartJS.register(
     CategoryScale,
@@ -32,7 +29,7 @@ export function WorkHoursChart({ workHours }: Props) {
     datasets: [
       {
         label: "Workhours",
-        data: workHours.map(formatTime),
+        data: workHours.map((el: number)=> el/60),
         backgroundColor: "rgba(99, 156, 255, 0.5)",
       },
     ],

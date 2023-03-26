@@ -12,6 +12,7 @@ import {
   isToday,
 } from "../utils/dateUtils";
 
+// 잔여 연차 가져오기
 async function fetchAnnual(user: User) {
   await new Promise((re) => setTimeout(re, 100));
   const annualCount = attendancesData.filter(
@@ -21,6 +22,7 @@ async function fetchAnnual(user: User) {
   return user.annual - annualCount.length;
 }
 
+// 오늘 근무기록 보기
 async function fetchAttendance(user: User) {
   await new Promise((re) => setTimeout(re, 100));
   const attendance = attendancesData.find(
@@ -28,6 +30,8 @@ async function fetchAttendance(user: User) {
   );
   return attendance;
 }
+
+// 출근 시작
 async function createAttendance(user: User) {
   await new Promise((re) => setTimeout(re, 100));
   const newId = attendancesData[attendancesData.length - 1].id + 1;
@@ -43,6 +47,7 @@ async function createAttendance(user: User) {
   attendancesData.push(newAttendance);
   return newAttendance;
 }
+// 퇴근
 async function updateAttendance(user: User) {
   await new Promise((re) => setTimeout(re, 100));
   const attendance = await fetchAttendance(user);
@@ -59,6 +64,8 @@ async function updateAttendance(user: User) {
   }
   return attendance;
 }
+
+// 연차 등록
 async function createAnnual(user: User, date: Date) {
   await new Promise((re) => setTimeout(re, 100));
   const newId = attendancesData[attendancesData.length - 1].id + 1;
@@ -75,21 +82,20 @@ async function createAnnual(user: User, date: Date) {
   return newAttendance;
 }
 
+// 금주 근무기록
 async function fetchAttendancesWeek(user: User) {
   await new Promise((re) => setTimeout(re, 100));
   const now = new Date('2023-03-17');
   const workhours = [0, 0, 0, 0, 0, 0, 0];
   const dates = getWeekDates(now);
-  console.log(dates);
   dates.forEach((date: string, idx: number) => {
     const attendance = attendancesData.find(
       (el: Attendance) => el.userId === user.id && el.date === date
     );
-    if(attendance?.startTime !== NotChecked && attendance?.endTime){
+    if(attendance && attendance?.startTime !== NotChecked && attendance?.endTime !== NotChecked){
       workhours[idx] = getTimeDiff(attendance.startTime, attendance.endTime);
     }
   });
-  console.log(workhours);
   return workhours;
 }
 
