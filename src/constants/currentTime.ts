@@ -1,0 +1,1 @@
+export const CURRENT_TIME = '2023-03-17';

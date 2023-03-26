@@ -13,6 +13,7 @@ import TodoModal from "../components/TodoModal";
 import { ModalStatus } from "../types/ModalStatus";
 import { ModalType } from "../constants/modalType";
 import AnnualModal from "../components/AnnualModal";
+import { WorkHoursChart } from "../components/WorkHoursChart";
 interface Props {
   user: User;
 }
@@ -25,6 +26,7 @@ export default function HomePage({ user }: Props) {
     todo: false,
     annual: false,
   });
+  const [workhours, setWorkhours] = useState<number[]>(new Array(7).fill(0));
 
   const handleShowModal = (modalType: ModalType) => {
     switch (modalType) {
@@ -49,6 +51,10 @@ export default function HomePage({ user }: Props) {
     const newAnnual = await attendanceAPI.fetchAnnual(user);
     setAnnual(newAnnual);
   }, [user]);
+  const getWorkHours = useCallback(async () => {
+    const newWorkHours = await attendanceAPI.fetchAttendancesWeek(user);
+    setWorkhours(newWorkHours);
+  }, [user]);
   const handleSubmitAttendance = async () => {
     if (!attendance) {
       const newAttendance = await attendanceAPI.createAttendance(user);
@@ -62,6 +68,7 @@ export default function HomePage({ user }: Props) {
     getTodo();
     getAttendance();
     getAnnual();
+    getWorkHours();
     console.log("Homepage!");
   }, [
     user,
@@ -71,6 +78,7 @@ export default function HomePage({ user }: Props) {
     getTodo,
     getAttendance,
     getAnnual,
+    getWorkHours,
     modalStatus,
   ]);
   return (
@@ -96,7 +104,7 @@ export default function HomePage({ user }: Props) {
           <ContentBox
             title="연차 현황"
             iconButton={
-              <FaPlus onClick={(e) => handleShowModal(ModalType.ANNUAL)} />
+              <FaPlus onClick={() => handleShowModal(ModalType.ANNUAL)} />
             }
           >
             <ContentValue>{annual}일</ContentValue>
@@ -104,7 +112,7 @@ export default function HomePage({ user }: Props) {
           <ContentBox
             title="오늘의 일정"
             iconButton={
-              <FaPen onClick={(e) => handleShowModal(ModalType.TODO)} />
+              <FaPen onClick={() => handleShowModal(ModalType.TODO)} />
             }
           >
             <ContentTodo>{todoContent}</ContentTodo>
@@ -121,7 +129,7 @@ export default function HomePage({ user }: Props) {
         </ContentBoxGroup>
         <ContentChartBox>
           <ContentBox title="금주 근무시간">
-            <input value={attendance?.endTime} />
+            <WorkHoursChart workHours={workhours}/>
           </ContentBox>
         </ContentChartBox>
       </Main>

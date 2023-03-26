@@ -3,7 +3,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { attendanceAPI } from "../api/attendanceAPI";
 import { User } from "../types/User";
-import { dateToTime, formatDigit, getLastDay } from "../utils/dateUtils";
+import { formatDigit, getCurrentTime } from "../utils/dateUtils";
 import ModalFooter from "./ModalFooter";
 
 interface Props {
@@ -19,7 +19,7 @@ interface FormState {
 }
 
 function AnnualModal({ showModal, user, content, onClose }: Props) {
-  const now = new Date();
+  const now = getCurrentTime();
   const [formState, setFormState] = useState<FormState>({
     year: now.getFullYear().toString(),
     month: formatDigit(now.getMonth() + 1),

@@ -5,6 +5,9 @@ import { User } from "../types/User";
 import {
   dateToString,
   dateToTime,
+  getCurrentTime,
+  getTimeDiff,
+  getWeekDates,
   isSameYear,
   isToday,
 } from "../utils/dateUtils";
@@ -28,7 +31,7 @@ async function fetchAttendance(user: User) {
 async function createAttendance(user: User) {
   await new Promise((re) => setTimeout(re, 100));
   const newId = attendancesData[attendancesData.length - 1].id + 1;
-  const now = new Date();
+  const now = getCurrentTime();
   const newAttendance: Attendance = {
     id: newId,
     userId: user.id,
@@ -46,7 +49,7 @@ async function updateAttendance(user: User) {
   if (attendance?.endTime === NotChecked) {
     const newAttendance: Attendance = {
       ...attendance,
-      endTime: dateToTime(new Date()),
+      endTime: dateToTime(getCurrentTime()),
     };
     const idx = attendancesData.findIndex(
       (el: Attendance) => el.id === attendance.id
@@ -72,10 +75,29 @@ async function createAnnual(user: User, date: Date) {
   return newAttendance;
 }
 
+async function fetchAttendancesWeek(user: User) {
+  await new Promise((re) => setTimeout(re, 100));
+  const now = new Date('2023-03-17');
+  const workhours = [0, 0, 0, 0, 0, 0, 0];
+  const dates = getWeekDates(now);
+  console.log(dates);
+  dates.forEach((date: string, idx: number) => {
+    const attendance = attendancesData.find(
+      (el: Attendance) => el.userId === user.id && el.date === date
+    );
+    if(attendance?.startTime !== NotChecked && attendance?.endTime){
+      workhours[idx] = getTimeDiff(attendance.startTime, attendance.endTime);
+    }
+  });
+  console.log(workhours);
+  return workhours;
+}
+
 export const attendanceAPI = {
   fetchAttendance,
   fetchAnnual,
   updateAttendance,
   createAttendance,
   createAnnual,
+  fetchAttendancesWeek,
 };
