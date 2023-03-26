@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import { FaPlus, FaPen } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
 import { User } from "../types/User";
-import { Todo } from "../types/Todo";
 import { attendanceAPI } from "../api/attendanceAPI";
 import { todoAPI } from "../api/todoAPI";
 import { Attendance } from "../types/Attendance";
@@ -10,27 +9,33 @@ import { Header } from "../components/Header";
 import { ContentBox } from "../components/ContentBox";
 import { getAttendanceStatus, isExited } from "../utils/attendanceUtils";
 import { StatusButtonColor } from "../constants/status";
-import Modal from "../components/Modal";
-import { createPortal } from "react-dom";
-import ModalFooter from "../components/ModalFooter";
+import TodoModal from "../components/TodoModal";
+import { ModalStatus } from "../types/ModalStatus";
 interface Props {
   user: User;
 }
+
 export default function HomePage({ user }: Props) {
-  const [todo, setTodo] = useState<Todo>();
+  const [todoContent, setTodoContent] = useState("");
   const [attendance, setAttendance] = useState<Attendance>();
   const [annual, setAnnual] = useState(0);
-  const [showModal, setShowModal] = useState(false);
+  const [modalStatus, setModalStatus] = useState<ModalStatus>({
+    todo: false,
+    annual: false,
+  });
+
   const handleShowModal = () => {
-    setShowModal(true);
+    console.log("modal!");
+    setModalStatus({ ...modalStatus, todo: true });
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
   const getTodo = useCallback(async () => {
-    const newTodo = await todoAPI.fetchTodo(user);
-    setTodo(newTodo);
+    try {
+      const newTodo = await todoAPI.fetchTodo(user);
+      setTodoContent(newTodo ? newTodo?.content : "");
+    } catch (error) {
+      console.log(error);
+    }
   }, [user]);
   const getAttendance = useCallback(async () => {
     const newAttendance = await attendanceAPI.fetchAttendance(user);
@@ -40,7 +45,7 @@ export default function HomePage({ user }: Props) {
     const newAnnual = await attendanceAPI.fetchAnnual(user);
     setAnnual(newAnnual);
   }, [user]);
-  const handleAttendanceChange = async (
+  const handleSubmitAttendance = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     if (!attendance) {
@@ -51,30 +56,27 @@ export default function HomePage({ user }: Props) {
       setAttendance(newAttendance);
     }
   };
-  const handleTodoChange = async () => {
-    // const 
-  };
   useEffect(() => {
     getTodo();
     getAttendance();
     getAnnual();
-  }, [user, attendance, annual, getTodo, getAttendance, getAnnual, showModal]);
+  }, [
+    user,
+    attendance,
+    annual,
+    getTodo,
+    getAttendance,
+    getAnnual,
+    modalStatus,
+  ]);
   return (
     <Container>
-      {showModal &&
-        createPortal(
-          <Modal showModal={showModal} onClose={handleCloseModal}>
-            <ContentBox>
-              <TodoModalContent value={todo?.content}/>
-            </ContentBox>
-            <ModalFooter
-              title="저장"
-              onClose={handleCloseModal}
-              onSubmit={handleTodoChange}
-            />
-          </Modal>,
-          document.body
-        )}
+      <TodoModal
+        showModal={modalStatus.todo}
+        user={user}
+        content={todoContent}
+        onClose={() => setModalStatus({ ...modalStatus, todo: false })}
+      />
       <Header />
       <Main>
         <ContentBoxGroup>
@@ -85,11 +87,11 @@ export default function HomePage({ user }: Props) {
             title="오늘의 일정"
             iconButton={<FaPen onClick={handleShowModal} />}
           >
-            <ContentTodo>{todo?.content}</ContentTodo>
+            <ContentTodo>{todoContent}</ContentTodo>
           </ContentBox>
           <ContentBox title="출/퇴근">
             <ContentToggleButton
-              onClick={handleAttendanceChange}
+              onClick={handleSubmitAttendance}
               disabled={isExited(attendance)}
               attendance={attendance}
             >
@@ -156,11 +158,4 @@ const ContentToggleButton = styled.button<{ attendance?: Attendance }>`
     isExited(props.attendance)
       ? StatusButtonColor.COMPLETE
       : StatusButtonColor.PROGRESS};
-`;
-
-const TodoModalContent = styled.textarea`
-  margin: 0;
-  padding: 1rem 1rem 1rem 1rem;
-  width: 300px;
-  height: 200px;
 `;

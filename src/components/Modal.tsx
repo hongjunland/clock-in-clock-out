@@ -4,28 +4,25 @@ import React, { useState } from "react";
 interface ModalProps {
   children: React.ReactNode;
   showModal: boolean;
-  onClose: () => void;
-  onSubmit?: ()=> void;
+  // onClose: () => void;
+  // onSubmit?: () => void;
 }
 
-export default function Modal({ showModal, onClose, children }: ModalProps) {
+export default function Modal({ showModal, children }: ModalProps) {
   const [show, setShow] = useState(showModal);
 
   const handleClose = () => {
     setShow(false);
-    onClose();
+    // onClose();
   };
 
   return (
     <>
+      {show && (
         <Wrapper>
-          <ModalContent>
-            {/* <span className="close" onClick={handleClose}>
-              &times;
-            </span> */}
-            {children}
-          </ModalContent>
+          <ModalContent>{children}</ModalContent>
         </Wrapper>
+      )}
     </>
   );
 }
