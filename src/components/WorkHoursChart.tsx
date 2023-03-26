@@ -28,7 +28,7 @@ function WorkHoursChart({ workHours }: Props) {
     labels,
     datasets: [
       {
-        label: "Workhours",
+        label: "시간",
         data: workHours.map((el: number)=> el/60),
         backgroundColor: "rgba(99, 156, 255, 0.5)",
       },

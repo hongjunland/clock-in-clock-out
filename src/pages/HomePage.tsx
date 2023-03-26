@@ -6,7 +6,13 @@ import { todoAPI } from "../api/todoAPI";
 import { getAttendanceStatus, isExited } from "../utils/attendanceUtils";
 import { StatusButtonColor } from "../constants/status";
 import { ModalType } from "../constants/modalType";
-import { AnnualModal, ContentBox, Header, TodoModal, WorkHoursChart } from "../components";
+import {
+  AnnualModal,
+  ContentBox,
+  Header,
+  TodoModal,
+  WorkHoursChart,
+} from "../components";
 import { Attendance, ModalStatus, User } from "../types";
 interface Props {
   user: User;
@@ -123,7 +129,7 @@ export default function HomePage({ user }: Props) {
         </ContentBoxGroup>
         <ContentChartBox>
           <ContentBox title="금주 근무시간">
-            <WorkHoursChart workHours={workhours}/>
+            <WorkHoursChart workHours={workhours} />
           </ContentBox>
         </ContentChartBox>
       </Main>
