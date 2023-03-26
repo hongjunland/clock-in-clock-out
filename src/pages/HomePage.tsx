@@ -1,19 +1,13 @@
 import styled from "@emotion/styled";
 import { FaPlus, FaPen } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
-import { User } from "../types/User";
 import { attendanceAPI } from "../api/attendanceAPI";
 import { todoAPI } from "../api/todoAPI";
-import { Attendance } from "../types/Attendance";
-import { Header } from "../components/Header";
-import { ContentBox } from "../components/ContentBox";
 import { getAttendanceStatus, isExited } from "../utils/attendanceUtils";
 import { StatusButtonColor } from "../constants/status";
-import TodoModal from "../components/TodoModal";
-import { ModalStatus } from "../types/ModalStatus";
 import { ModalType } from "../constants/modalType";
-import AnnualModal from "../components/AnnualModal";
-import { WorkHoursChart } from "../components/WorkHoursChart";
+import { AnnualModal, ContentBox, Header, TodoModal, WorkHoursChart } from "../components";
+import { Attendance, ModalStatus, User } from "../types";
 interface Props {
   user: User;
 }

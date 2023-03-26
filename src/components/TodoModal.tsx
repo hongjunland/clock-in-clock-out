@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { todoAPI } from "../api/todoAPI";
-import { User } from "../types/User";
-import { ContentBox } from "./ContentBox";
+import { User } from "../types";
+import ContentBox from "./ContentBox";
 import ModalFooter from "./ModalFooter";
 
 interface Props {

@@ -1,4 +1,4 @@
-export interface Attendance{
+export default interface Attendance{
     id: number;
     userId: number;
     date: string;

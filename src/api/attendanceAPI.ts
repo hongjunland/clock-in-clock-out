@@ -1,7 +1,6 @@
 import { NotChecked } from "../constants/status";
 import { attendancesData } from "../dummy/dummyData";
-import { Attendance } from "../types/Attendance";
-import { User } from "../types/User";
+import { Attendance, User } from "../types";
 import {
   dateToString,
   dateToTime,

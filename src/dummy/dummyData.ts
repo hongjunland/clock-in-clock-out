@@ -1,7 +1,5 @@
 import { NotChecked } from "../constants/status"
-import { Attendance } from "../types/Attendance"
-import { Todo } from "../types/Todo"
-import { User } from "../types/User"
+import { Attendance, Todo, User } from "../types"
 
 export const userData : User= {
     id: 1,

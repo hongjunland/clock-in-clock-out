@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { attendanceAPI } from "../api/attendanceAPI";
-import { User } from "../types/User";
+import { User } from "../types";
 import { formatDigit, getCurrentTime } from "../utils/dateUtils";
 import ModalFooter from "./ModalFooter";
 

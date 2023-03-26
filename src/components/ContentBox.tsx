@@ -4,7 +4,7 @@ interface Props {
   title?: string;
   iconButton?: React.ReactNode;
 }
-export function ContentBox({
+function ContentBox({
   children,
   title,
   iconButton,
@@ -57,3 +57,5 @@ const ContentBoxMain = styled.div`
   display: flex;
   flex: 1;
 `;
+
+export default ContentBox;

@@ -4,7 +4,7 @@ interface Props {
   title: string;
   onClose: () => void;
 }
-export default function ModalFooter({ title, onClose }: Props) {
+function ModalFooter({ title, onClose }: Props) {
   return <Wrapper>
     <Submit type="submit">{title}</Submit>
     <CloseButton onClick={onClose}>닫기</CloseButton>
@@ -42,3 +42,5 @@ const CloseButton = styled.button`
     width: 50px;
     height: 40px;
 `;
+
+export default ModalFooter;

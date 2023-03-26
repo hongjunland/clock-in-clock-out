@@ -1,6 +1,5 @@
 import { todosData } from "../dummy/dummyData";
-import { Todo } from "../types/Todo";
-import { User } from "../types/User";
+import { Todo, User } from "../types";
 // 할일 가져오기
 async function fetchTodo(user: User) {
   await new Promise((re) => setTimeout(re, 100));

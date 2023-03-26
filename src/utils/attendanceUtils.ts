@@ -1,5 +1,5 @@
 import { NotChecked, StatusButton } from "../constants/status";
-import { Attendance } from "../types/Attendance";
+import { Attendance } from "../types";
 
 function getAttendanceStatus(attendance?: Attendance){
     if(attendance === undefined)

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import logo from "../assets/logo.png";
 
-export function Header(){
+function Header(){
     return (
         <Wrapper>
           <Logo src={logo} alt={"logo"} />
@@ -26,3 +26,5 @@ const MainTitle = styled.div`
     vertical-align: middle;
   }
 `;
+
+export default Header;

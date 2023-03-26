@@ -13,7 +13,7 @@ interface Props {
   workHours: number[];
 }
 
-export function WorkHoursChart({ workHours }: Props) {
+function WorkHoursChart({ workHours }: Props) {
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -46,3 +46,5 @@ export function WorkHoursChart({ workHours }: Props) {
 
   return <Bar data={data} options={options}/>;
 }
+
+export default WorkHoursChart;
