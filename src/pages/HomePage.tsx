@@ -11,6 +11,8 @@ import { getAttendanceStatus, isExited } from "../utils/attendanceUtils";
 import { StatusButtonColor } from "../constants/status";
 import TodoModal from "../components/TodoModal";
 import { ModalStatus } from "../types/ModalStatus";
+import { ModalType } from "../constants/modalType";
+import AnnualModal from "../components/AnnualModal";
 interface Props {
   user: User;
 }
@@ -24,18 +26,20 @@ export default function HomePage({ user }: Props) {
     annual: false,
   });
 
-  const handleShowModal = () => {
-    console.log("modal!");
-    setModalStatus({ ...modalStatus, todo: true });
+  const handleShowModal = (modalType: ModalType) => {
+    switch (modalType) {
+      case ModalType.ANNUAL:
+        setModalStatus({ ...modalStatus, annual: true });
+        break;
+      case ModalType.TODO:
+        setModalStatus({ ...modalStatus, todo: true });
+        break;
+    }
   };
 
   const getTodo = useCallback(async () => {
-    try {
-      const newTodo = await todoAPI.fetchTodo(user);
-      setTodoContent(newTodo ? newTodo?.content : "");
-    } catch (error) {
-      console.log(error);
-    }
+    const newTodo = await todoAPI.fetchTodo(user);
+    setTodoContent(newTodo ? newTodo?.content : "");
   }, [user]);
   const getAttendance = useCallback(async () => {
     const newAttendance = await attendanceAPI.fetchAttendance(user);
@@ -45,9 +49,7 @@ export default function HomePage({ user }: Props) {
     const newAnnual = await attendanceAPI.fetchAnnual(user);
     setAnnual(newAnnual);
   }, [user]);
-  const handleSubmitAttendance = async (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleSubmitAttendance = async () => {
     if (!attendance) {
       const newAttendance = await attendanceAPI.createAttendance(user);
       setAttendance(newAttendance);
@@ -60,10 +62,12 @@ export default function HomePage({ user }: Props) {
     getTodo();
     getAttendance();
     getAnnual();
+    console.log("Homepage!");
   }, [
     user,
     attendance,
     annual,
+    todoContent,
     getTodo,
     getAttendance,
     getAnnual,
@@ -71,21 +75,37 @@ export default function HomePage({ user }: Props) {
   ]);
   return (
     <Container>
-      <TodoModal
-        showModal={modalStatus.todo}
-        user={user}
-        content={todoContent}
-        onClose={() => setModalStatus({ ...modalStatus, todo: false })}
-      />
+      {modalStatus.annual && (
+        <AnnualModal
+          user={user}
+          content={todoContent}
+          onClose={() => setModalStatus({ ...modalStatus, annual: false })}
+          showModal={false}
+        />
+      )}
+      {modalStatus.todo && (
+        <TodoModal
+          user={user}
+          content={todoContent}
+          onClose={() => setModalStatus({ ...modalStatus, todo: false })}
+        />
+      )}
       <Header />
       <Main>
         <ContentBoxGroup>
-          <ContentBox title="연차 현황" iconButton={<FaPlus />}>
+          <ContentBox
+            title="연차 현황"
+            iconButton={
+              <FaPlus onClick={(e) => handleShowModal(ModalType.ANNUAL)} />
+            }
+          >
             <ContentValue>{annual}일</ContentValue>
           </ContentBox>
           <ContentBox
             title="오늘의 일정"
-            iconButton={<FaPen onClick={handleShowModal} />}
+            iconButton={
+              <FaPen onClick={(e) => handleShowModal(ModalType.TODO)} />
+            }
           >
             <ContentTodo>{todoContent}</ContentTodo>
           </ContentBox>

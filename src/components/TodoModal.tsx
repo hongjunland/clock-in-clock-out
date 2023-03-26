@@ -7,16 +7,14 @@ import { ContentBox } from "./ContentBox";
 import ModalFooter from "./ModalFooter";
 
 interface Props {
-  showModal: boolean;
   user: User;
   content: string;
   onClose: () => void;
 }
-function TodoModal({ showModal, user, content, onClose }: Props) {
-  const [currentContent, setContent] = useState(content);
+function TodoModal({ user, content, onClose }: Props) {
+  const [currentContent, setCurrentContent] = useState(content);
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.currentTarget.value);
-    setContent(e.currentTarget.value);
+    setCurrentContent(e.currentTarget.value);
   };
   const handleSubmitTodo = async () => {
     const todo = await todoAPI.fetchTodo(user);
@@ -29,25 +27,23 @@ function TodoModal({ showModal, user, content, onClose }: Props) {
   };
   return (
     <>
-      {showModal &&
-        createPortal(
-          <Wrapper>
-            <ModalContent>
-              <ContentBox>
-                <TodoModalContent
-                  value={currentContent}
-                  onChange={handleContentChange}
-                />
-              </ContentBox>
-              <ModalFooter
-                title="저장"
-                onClose={onClose}
-                onSubmit={handleSubmitTodo}
-              />
-            </ModalContent>
-          </Wrapper>,
-          document.body
-        )}
+      {createPortal(
+      <Wrapper>
+        <ModalContent>
+          <ContentBox>
+            <TodoModalContent
+              value={currentContent}
+              onChange={handleContentChange}
+            />
+          </ContentBox>
+          <ModalFooter
+            title="저장"
+            onClose={onClose}
+            onSubmit={handleSubmitTodo}
+          />
+        </ModalContent>
+      </Wrapper>
+      , document.body)}
     </>
   );
 }
@@ -71,7 +67,7 @@ const ModalContent = styled.div`
 `;
 const TodoModalContent = styled.textarea`
   margin: 0;
-  padding: 1rem 1rem 1rem 1rem;
+  padding: 1rem 1rem 0 1rem;
   width: 300px;
   height: 200px;
 `;
