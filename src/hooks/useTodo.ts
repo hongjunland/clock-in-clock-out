@@ -14,7 +14,6 @@ export default function useTodo(user: User) {
     if (todo) {
       const newTodo = { ...todo, content: newTodoContent };
       const result = await todoAPI.updateTodo(user, newTodo);
-      console.log(result);
       callback();
     }
   };

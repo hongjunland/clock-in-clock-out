@@ -77,7 +77,6 @@ async function createAnnual(user: User, date: Date) {
     annual: true,
   };
   attendancesData.push(newAttendance);
-  console.log(attendancesData);
   return newAttendance;
 }
 

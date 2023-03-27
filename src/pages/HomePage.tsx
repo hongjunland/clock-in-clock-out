@@ -38,7 +38,6 @@ export default function HomePage({ user }: Props) {
     fetchAnnual();
     fetchWorkhours();
     fetchAnnualDates();
-    console.log("Homepage!");
   }, [
     user,
     attendance,

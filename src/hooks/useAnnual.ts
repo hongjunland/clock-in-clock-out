@@ -17,7 +17,6 @@ export default function useAnnual(user: User) {
         }-${selected?.getDate()}`
       );
       const newAttendance = await attendanceAPI.createAnnual(user, newDate);
-      console.log(newAttendance);
       callback();
     }
   };

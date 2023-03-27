@@ -1,4 +1,3 @@
-import { CURRENT_TIME } from "../constants/currentTime";
 // 금일이 2023-03-17로 바꾸기
 function getCurrentTime(){
   const now = new Date();
