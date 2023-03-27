@@ -5,9 +5,7 @@ import logo from "../assets/logo.png";
 function Header() {
   return (
     <Wrapper>
-      <Link to="/">
-        <Logo src={logo} alt={"logo"} />
-      </Link>
+      <Logo src={logo} alt={"logo"} />
       <MainTitle>
         <span>Noris Work Dashboard</span>
       </MainTitle>
