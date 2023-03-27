@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { FaPlus, FaPen } from "react-icons/fa";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { attendanceAPI } from "../api/attendanceAPI";
+import { todoAPI } from "../api/todoAPI";
 import { getAttendanceStatus, isExited } from "../utils/attendanceUtils";
 import { StatusButtonColor } from "../constants/status";
 import { ModalType } from "../constants/modalType";
@@ -11,25 +13,68 @@ import {
   TodoModal,
   WorkHoursChart,
 } from "../components";
-import { Attendance, User } from "../types";
-import {useAnnual, useAnnualDates, useAttendance, useShowModal, useTodo, useWorkhours} from "../hooks";
+import { Attendance, ModalStatus, User } from "../types";
 interface Props {
   user: User;
 }
 
 export default function HomePage({ user }: Props) {
-  const {todoContent, getTodo} = useTodo(user);
-  const {attendance, submitAttendance ,getAttendance} = useAttendance(user);
-  const {annual, getAnnual} = useAnnual(user);
-  const {workhours, getWorkhours} = useWorkhours(user);
-  const {annualDates, getAnnualDates } = useAnnualDates(user);
-  const {modalStatus, handleShowModal} = useShowModal(user);
+  const [todoContent, setTodoContent] = useState("");
+  const [attendance, setAttendance] = useState<Attendance>();
+  const [annual, setAnnual] = useState(0);
+  const [modalStatus, setModalStatus] = useState<ModalStatus>({
+    todo: false,
+    annual: false,
+  });
+  const [workhours, setWorkhours] = useState<number[]>(new Array(7).fill(0));
+  const [annualDates, setAnnualDates] = useState<Date[]>([]);
+
+  const handleShowModal = (modalType: ModalType) => {
+    switch (modalType) {
+      case ModalType.ANNUAL:
+        setModalStatus({ ...modalStatus, annual: true });
+        break;
+      case ModalType.TODO:
+        setModalStatus({ ...modalStatus, todo: true });
+        break;
+    }
+  };
+
+  const getTodo = useCallback(async () => {
+    const newTodo = await todoAPI.fetchTodo(user);
+    setTodoContent(newTodo ? newTodo?.content : "");
+  }, [user]);
+  const getAttendance = useCallback(async () => {
+    const newAttendance = await attendanceAPI.fetchAttendance(user);
+    setAttendance(newAttendance);
+  }, [user]);
+  const getAnnual = useCallback(async () => {
+    const newAnnual = await attendanceAPI.fetchAnnual(user);
+    setAnnual(newAnnual);
+  }, [user]);
+  const getWorkHours = useCallback(async () => {
+    const newWorkHours = await attendanceAPI.fetchAttendancesWeek(user);
+    setWorkhours(newWorkHours);
+  }, [user]);
+  const getAnnualDates = useCallback(async () => {
+    const newAnnualDates = await attendanceAPI.fetchAnnualDates(user);
+    setAnnualDates(newAnnualDates);
+  }, [user]);
+  const handleSubmitAttendance = async () => {
+    if (!attendance) {
+      const newAttendance = await attendanceAPI.createAttendance(user);
+      setAttendance(newAttendance);
+    } else {
+      const newAttendance = await attendanceAPI.updateAttendance(user);
+      setAttendance(newAttendance);
+    }
+  };
 
   useEffect(() => {
     getTodo();
     getAttendance();
     getAnnual();
-    getWorkhours();
+    getWorkHours();
     getAnnualDates();
     console.log("Homepage!");
   }, [
@@ -40,16 +85,17 @@ export default function HomePage({ user }: Props) {
     getTodo,
     getAttendance,
     getAnnual,
-    getWorkhours,
+    getWorkHours,
     getAnnualDates,
     modalStatus,
   ]);
   return (
     <Container>
-      {/* {modalStatus.annual && (
+      {modalStatus.annual && (
         <AnnualModal
           user={user}
-          onClose={() => handleShowModal(ModalType.ANNUAL, false)}
+          content={todoContent}
+          onClose={() => setModalStatus({ ...modalStatus, annual: false })}
           showModal={false}
           data={annualDates}
         />
@@ -58,16 +104,16 @@ export default function HomePage({ user }: Props) {
         <TodoModal
           user={user}
           content={todoContent}
-          onClose={() => handleShowModal(ModalType.TODO, false)}
+          onClose={() => setModalStatus({ ...modalStatus, todo: false })}
         />
-      )} */}
+      )}
       <Header />
       <Main>
         <ContentBoxGroup>
           <ContentBox
             title="연차 현황"
             iconButton={
-              <FaPlus onClick={() => handleShowModal(ModalType.ANNUAL, true)} />
+              <FaPlus onClick={() => handleShowModal(ModalType.ANNUAL)} />
             }
           >
             <ContentValue>{annual}일</ContentValue>
@@ -75,14 +121,14 @@ export default function HomePage({ user }: Props) {
           <ContentBox
             title="오늘의 일정"
             iconButton={
-              <FaPen onClick={() => handleShowModal(ModalType.TODO, true)} />
+              <FaPen onClick={() => handleShowModal(ModalType.TODO)} />
             }
           >
             <ContentTodo>{todoContent}</ContentTodo>
           </ContentBox>
           <ContentBox title="출/퇴근">
             <ContentToggleButton
-              onClick={submitAttendance}
+              onClick={handleSubmitAttendance}
               disabled={isExited(attendance)}
               attendance={attendance}
             >

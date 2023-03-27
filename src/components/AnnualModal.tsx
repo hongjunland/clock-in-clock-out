@@ -9,7 +9,6 @@ import ModalFooter from "./ModalFooter";
 interface Props {
   showModal: boolean;
   user: User;
-  content: string;
   onClose: () => void;
   data: Date[];
 }

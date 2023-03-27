@@ -1,15 +1,18 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
-function Header(){
-    return (
-        <Wrapper>
-          <Logo src={logo} alt={"logo"} />
-          <MainTitle>
-            <span>Noris Work Dashboard</span>
-          </MainTitle>
-        </Wrapper>
-    );
+function Header() {
+  return (
+    <Wrapper>
+      <Link to="/">
+        <Logo src={logo} alt={"logo"} />
+      </Link>
+      <MainTitle>
+        <span>Noris Work Dashboard</span>
+      </MainTitle>
+    </Wrapper>
+  );
 }
 const Wrapper = styled.header`
   display: flex;
