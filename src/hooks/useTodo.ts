@@ -11,6 +11,15 @@ export default function useTodo(user: User) {
     const newTodo = await todoAPI.fetchTodo(user);
     setTodoContent(newTodo ? newTodo?.content : "");
   }, [user]);
-
-  return {todoContent, getTodo};
+  const submitUpdateTodo = async (e: React.MouseEvent<HTMLFormElement>, newTodoContent: string, callback: ()=>void) => {
+    e.preventDefault();
+    const todo = await todoAPI.fetchTodo(user);
+    if (todo) {
+      const newTodo = { ...todo, content: newTodoContent };
+      const result = await todoAPI.updateTodo(user, newTodo);
+      console.log(result);
+      callback();
+    }
+  };
+  return {todoContent, getTodo, submitUpdateTodo};
 }

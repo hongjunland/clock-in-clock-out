@@ -46,7 +46,7 @@ export default function HomePage({ user }: Props) {
   ]);
   return (
     <Container>
-      {/* {modalStatus.annual && (
+      {modalStatus.annual && (
         <AnnualModal
           user={user}
           onClose={() => handleShowModal(ModalType.ANNUAL, false)}
@@ -60,7 +60,7 @@ export default function HomePage({ user }: Props) {
           content={todoContent}
           onClose={() => handleShowModal(ModalType.TODO, false)}
         />
-      )} */}
+      )}
       <Header />
       <Main>
         <ContentBoxGroup>
