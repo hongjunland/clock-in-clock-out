@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback} from "react";
 import { attendanceAPI } from "../api/attendanceAPI";
 import { Attendance, User } from "../types";
 
 export default function useAttendance(user: User) {
   const [attendance, setAttendance] = useState<Attendance>();
 
-  const getAttendance = useCallback(async () => {
+  const fetchAttendance = useCallback(async () => {
     const newAttendance = await attendanceAPI.fetchAttendance(user);
     setAttendance(newAttendance);
   }, [user]);
@@ -19,5 +19,5 @@ export default function useAttendance(user: User) {
     }
   };
 
-  return { attendance, submitAttendance, getAttendance };
+  return { attendance, submitAttendance, fetchAttendance };
 }

@@ -1,18 +1,15 @@
-// utils.ts
-
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { todoAPI } from "../api/todoAPI";
 import { User } from "../types";
 
 export default function useTodo(user: User) {
   const [todoContent, setTodoContent] = useState("");
 
-  const getTodo = useCallback(async () => {
+  const fetchTodo = useCallback(async () => {
     const newTodo = await todoAPI.fetchTodo(user);
     setTodoContent(newTodo ? newTodo?.content : "");
   }, [user]);
-  const submitUpdateTodo = async (e: React.MouseEvent<HTMLFormElement>, newTodoContent: string, callback: ()=>void) => {
-    e.preventDefault();
+  const updateTodo = async (newTodoContent: string, callback: ()=>void) => {
     const todo = await todoAPI.fetchTodo(user);
     if (todo) {
       const newTodo = { ...todo, content: newTodoContent };
@@ -21,5 +18,5 @@ export default function useTodo(user: User) {
       callback();
     }
   };
-  return {todoContent, getTodo, submitUpdateTodo};
+  return {todoContent, fetchTodo, updateTodo};
 }

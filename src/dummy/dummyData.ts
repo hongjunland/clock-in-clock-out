@@ -45,11 +45,3 @@ export const attendancesData : Attendance[] = [
         annual: false,
     },
 ]
-
-export const annualsData = [
-    {
-        id: 1, 
-        date: '2023-03-15',
-        userId: 1
-    }
-]

@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Value } from "react-calendar/dist/cjs/shared/types";
@@ -18,8 +17,6 @@ interface Props{
 function AnnualCalendar({data, selected, onChangeSelect}:Props) {
 
   function handleDateChange(value: Value, e: React.MouseEvent<HTMLButtonElement>) {
-    console.log(e.currentTarget);
-    console.log(value);
     if (value) {
       onChangeSelect(new Date(value.toString()));
     }

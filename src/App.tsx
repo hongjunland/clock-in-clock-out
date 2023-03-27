@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { userAPI } from "./api/userAPI";
 import HomePage from "./pages/HomePage";
-import MyCalendar from "./components/AnnualCalendar";
 import { User } from "./types";
 
 function App() {

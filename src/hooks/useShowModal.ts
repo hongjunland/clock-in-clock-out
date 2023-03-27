@@ -1,10 +1,8 @@
-// utils.ts
-
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { ModalType } from "../constants/modalType";
-import { ModalStatus, User } from "../types";
+import { ModalStatus } from "../types";
 
-export default function useShowModal(user: User) {
+export default function useShowModal() {
   const [modalStatus, setModalStatus] = useState<ModalStatus>({
     todo: false,
     annual: false,

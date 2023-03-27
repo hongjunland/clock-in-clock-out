@@ -13,12 +13,13 @@ interface Props {
 }
 function TodoModal({ user, content, onClose }: Props) {
   const [currentContent, setCurrentContent] = useState(content);
-  const {submitUpdateTodo} = useTodo(user);
+  const {updateTodo} = useTodo(user);
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCurrentContent(e.currentTarget.value);
   };
   const handleSubmitTodo = (e: React.MouseEvent<HTMLFormElement>) => {
-    submitUpdateTodo(e, currentContent, onClose);
+    e.preventDefault();
+    updateTodo(currentContent, onClose);
   };
   return (
     <Modal>

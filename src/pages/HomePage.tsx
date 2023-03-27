@@ -12,36 +12,43 @@ import {
   WorkHoursChart,
 } from "../components";
 import { Attendance, User } from "../types";
-import {useAnnual, useAnnualDates, useAttendance, useShowModal, useTodo, useWorkhours} from "../hooks";
+import {
+  useAnnual,
+  useAnnualDates,
+  useAttendance,
+  useShowModal,
+  useTodo,
+  useWorkhours,
+} from "../hooks";
 interface Props {
   user: User;
 }
 
 export default function HomePage({ user }: Props) {
-  const {todoContent, getTodo} = useTodo(user);
-  const {attendance, submitAttendance ,getAttendance} = useAttendance(user);
-  const {annual, getAnnual} = useAnnual(user);
-  const {workhours, getWorkhours} = useWorkhours(user);
-  const {annualDates, getAnnualDates } = useAnnualDates(user);
-  const {modalStatus, handleShowModal} = useShowModal(user);
+  const { todoContent, fetchTodo } = useTodo(user);
+  const { attendance, submitAttendance, fetchAttendance } = useAttendance(user);
+  const { annual, fetchAnnual } = useAnnual(user);
+  const { workhours, fetchWorkhours } = useWorkhours(user);
+  const { annualDates, fetchAnnualDates } = useAnnualDates(user);
+  const { modalStatus, handleShowModal } = useShowModal();
 
   useEffect(() => {
-    getTodo();
-    getAttendance();
-    getAnnual();
-    getWorkhours();
-    getAnnualDates();
+    fetchTodo();
+    fetchTodo();
+    fetchAnnual();
+    fetchWorkhours();
+    fetchAnnualDates();
     console.log("Homepage!");
   }, [
     user,
     attendance,
     annual,
     todoContent,
-    getTodo,
-    getAttendance,
-    getAnnual,
-    getWorkhours,
-    getAnnualDates,
+    fetchTodo,
+    fetchAttendance,
+    fetchAnnual,
+    fetchWorkhours,
+    fetchAnnualDates,
     modalStatus,
   ]);
   return (
