@@ -12,18 +12,16 @@ const SelectedDate = styled.div`
 interface Props{
   data: Date[];
   selected: Date;
-  onChangeSelect: ()=>void;
+  onChangeSelect: (date: Date)=>void;
 }
 
 function AnnualCalendar({data, selected, onChangeSelect}:Props) {
-  const [selectedDate, setSelectedDate] = useState(selected);
 
   function handleDateChange(value: Value, e: React.MouseEvent<HTMLButtonElement>) {
-    console.log(e.target);
+    console.log(e.currentTarget);
     console.log(value);
     if (value) {
-      setSelectedDate(new Date(value.toString()));
-      onChangeSelect();
+      onChangeSelect(new Date(value.toString()));
     }
   }
   function isAnnual(date: Date){
@@ -45,7 +43,7 @@ function AnnualCalendar({data, selected, onChangeSelect}:Props) {
       <h2>연차 신청</h2>
       <Calendar
         onChange={handleDateChange}
-        value={selectedDate}
+        value={selected}
         tileContent={tileContent}
       />
     </div>
