@@ -98,6 +98,12 @@ async function fetchAttendancesWeek(user: User) {
   return workhours;
 }
 
+async function fetchAnnualDates(user: User){
+  await new Promise((re) => setTimeout(re, 100));
+  const attendances = attendancesData.filter((el: Attendance)=> el.userId === user.id && el.annual);
+  return attendances.map((el: Attendance)=> new Date(el.date));
+}
+
 export const attendanceAPI = {
   fetchAttendance,
   fetchAnnual,
@@ -105,4 +111,5 @@ export const attendanceAPI = {
   createAttendance,
   createAnnual,
   fetchAttendancesWeek,
+  fetchAnnualDates,
 };

@@ -27,6 +27,7 @@ export default function HomePage({ user }: Props) {
     annual: false,
   });
   const [workhours, setWorkhours] = useState<number[]>(new Array(7).fill(0));
+  const [annualDates, setAnnualDates] = useState<Date[]>([]);
 
   const handleShowModal = (modalType: ModalType) => {
     switch (modalType) {
@@ -55,6 +56,10 @@ export default function HomePage({ user }: Props) {
     const newWorkHours = await attendanceAPI.fetchAttendancesWeek(user);
     setWorkhours(newWorkHours);
   }, [user]);
+  const getAnnualDates = useCallback(async () => {
+    const newAnnualDates = await attendanceAPI.fetchAnnualDates(user);
+    setAnnualDates(newAnnualDates);
+  }, [user]);
   const handleSubmitAttendance = async () => {
     if (!attendance) {
       const newAttendance = await attendanceAPI.createAttendance(user);
@@ -64,11 +69,13 @@ export default function HomePage({ user }: Props) {
       setAttendance(newAttendance);
     }
   };
+
   useEffect(() => {
     getTodo();
     getAttendance();
     getAnnual();
     getWorkHours();
+    getAnnualDates();
     console.log("Homepage!");
   }, [
     user,
@@ -79,6 +86,7 @@ export default function HomePage({ user }: Props) {
     getAttendance,
     getAnnual,
     getWorkHours,
+    getAnnualDates,
     modalStatus,
   ]);
   return (
@@ -89,6 +97,7 @@ export default function HomePage({ user }: Props) {
           content={todoContent}
           onClose={() => setModalStatus({ ...modalStatus, annual: false })}
           showModal={false}
+          data={annualDates}
         />
       )}
       {modalStatus.todo && (

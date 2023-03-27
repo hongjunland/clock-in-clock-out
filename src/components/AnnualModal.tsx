@@ -12,41 +12,53 @@ interface Props {
   user: User;
   content: string;
   onClose: () => void;
+  data: Date[];
 }
-interface FormState {
-  year: string;
-  month: string;
-  day: string;
-}
+// interface FormState {
+//   year: string;
+//   month: string;
+//   day: string;
+// }
 
-function AnnualModal({ showModal, user, content, onClose }: Props) {
+function AnnualModal({ showModal, user, content, data, onClose }: Props) {
   const now = getCurrentTime();
-  const [formState, setFormState] = useState<FormState>({
-    year: now.getFullYear().toString(),
-    month: formatDigit(now.getMonth() + 1),
-    day: formatDigit(now.getDate()),
-  });
-  const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: formatDigit(e.target.value),
-    });
+  const [selected, setSelected] = useState<Date>(new Date());
+  // const [formState, setFormState] = useState<FormState>({
+  //   year: now.getFullYear().toString(),
+  //   month: formatDigit(now.getMonth() + 1),
+  //   day: formatDigit(now.getDate()),
+  // });
+  // const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFormState({
+  //     ...formState,
+  //     [e.target.name]: formatDigit(e.target.value),
+  //   });
+  // };
+   const handleContentChange = () => {
+    // console.log(e);
+    // setSelected();
   };
   const handleSubmitTodo = async (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newDate = new Date(`${formState.year}-${formState.month}-${formState.day}`);
-    const newAttendance = await attendanceAPI.createAnnual(user, newDate);
-    console.log(newAttendance);
-    onClose();
+    if (selected) {
+      const newDate = new Date(
+        `${selected?.getFullYear()}-${
+          selected?.getMonth() + 1
+        }-${selected?.getDate()}`
+      );
+      const newAttendance = await attendanceAPI.createAnnual(user, newDate);
+      console.log(newAttendance);
+      onClose();
+    }
   };
   return (
     <>
       {createPortal(
         <Wrapper>
-          <AnnualCalendar/>
-          {/* <ModalContent>
+          <ModalContent>
             <form onSubmit={handleSubmitTodo}>
-              <div>
+              <AnnualCalendar data={data} selected={selected} onChangeSelect={handleContentChange}/>
+              {/* <div>
                 <AnnualTitle>
                   <span>연차 신청</span>
                 </AnnualTitle>
@@ -74,10 +86,10 @@ function AnnualModal({ showModal, user, content, onClose }: Props) {
                   value={formState.day}
                   onChange={handleContentChange}
                 />
-              </div>
+              </div> */}
               <ModalFooter title="신청" onClose={onClose} />
             </form>
-          </ModalContent> */}
+          </ModalContent>
         </Wrapper>,
         document.body
       )}
